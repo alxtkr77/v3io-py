@@ -13,25 +13,17 @@
 # limitations under the License.
 #
 import datetime
-import sys
 
 # used only n py2
 BASE_DATETIME = datetime.datetime(1970, 1, 1)
 
 
-def _get_timestamp_from_datetime_py3(dt):
+def _get_timestamp_from_datetime(dt):
     return dt.astimezone(datetime.timezone.utc).timestamp()
 
 
 def _get_timestamp_from_datetime_py2(dt):
     return (dt - BASE_DATETIME).total_seconds()
-
-
-# _get_timestamp_from_datetime is python version specific. resolve this once
-if sys.version_info[0] >= 3:
-    _get_timestamp_from_datetime = _get_timestamp_from_datetime_py3
-else:
-    _get_timestamp_from_datetime = _get_timestamp_from_datetime_py2
 
 
 def encode(dt):
