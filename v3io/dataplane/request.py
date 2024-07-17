@@ -414,7 +414,7 @@ def _to_base64(input):
 
 def _dict_to_typed_attributes(d):
     typed_attributes = {}
-
+    max_string_length = 61199
     for key, value in future.utils.viewitems(d):
         attribute_type = type(value)
         type_value = None
@@ -422,9 +422,21 @@ def _dict_to_typed_attributes(d):
         if isinstance(value, future.utils.text_type):
             type_key = "S"
             type_value = value
+            if len(value) > max_string_length:
+                raise AttributeError(
+                    "Attribute {0} is too long({1} bytes) when max is {2} bytes".format(
+                        key, len(value), max_string_length
+                    )
+                )
         elif isinstance(value, future.utils.string_types):
             type_key = "S"
             type_value = str(value)
+            if len(type_value) > max_string_length:
+                raise AttributeError(
+                    "Attribute {0} is too long({1} bytes) when max is {2} bytes".format(
+                        key, len(value), max_string_length
+                    )
+                )
         elif attribute_type in [int, float]:
             type_key = "N"
             type_value = str(value)

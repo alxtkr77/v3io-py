@@ -446,6 +446,15 @@ class TestKv(Test):
         for key in item[item_key]:
             self._compare_item_types(item[item_key][key], response.output.item[key])
 
+        item = {item_key: {"large_string": "a" * 61200}}
+        try:
+            self._client.kv.put(
+                container=self._container, table_path=self._path, key=item_key, attributes=item[item_key]
+            )
+            self.fail("Large string should have raised an exception")
+        except AttributeError:
+            pass
+
     def test_kv(self):
         items = {
             "bob": {"age": 42, "feature": "mustache"},
